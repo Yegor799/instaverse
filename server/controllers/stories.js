@@ -25,4 +25,17 @@ const createStory = async (req, res) => {
   }
 };
 
-export { getStories, createStory };
+const updateStory = async (req,res) => {
+  const { id: _id } = req.params;
+  const story = req.body;
+
+  if (!mongoose.Types.ObjectId.isValid(_id)) {
+    return res.status(404).send("This id doesn't belong to any story");
+  }
+
+  const updatedStory = await Story.findByIdAndUpdate(_id, story, { new: true });
+
+  res.json(updatedStory);
+}
+
+export { getStories, createStory, updateStory };
