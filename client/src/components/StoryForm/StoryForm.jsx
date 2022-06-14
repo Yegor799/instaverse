@@ -1,27 +1,43 @@
-import React from 'react';
-import { useDispatch } from 'react-redux';
+import React, {useEffect} from 'react';
+import {useSelector, useDispatch } from 'react-redux';
 import { Card, Form, Input, Typography, Button } from 'antd';
 import 'antd/dist/antd.css';
 import FileBase64 from "react-file-base64";
 import styles from './styles';
-import { createStory } from '../../redux/actions/stories';
+import { createStory, updateStory } from '../../redux/actions/stories';
 
 const { Title } = Typography;
 
-const StoryForm = () => {
+const StoryForm = ({ selectedId, setSelectedId }) => {
+  const story = useSelector(state => selectedId ? state.stories.find(story => story._id === selectedId) : null);  
   const [form] = Form.useForm();
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    if (story) {
+      form.setFieldsValue(story)
+    }
+  }, [form, story])
+  
+
   const onSubmit = (formValues) => {
-    dispatch(createStory(formValues));
+    selectedId ?
+      dispatch(updateStory(selectedId, formValues))
+      : dispatch(createStory(formValues));  
+    reset();
   };
+
+  const reset = () => {
+    form.resetFields();
+    setSelectedId(null);
+  }
 
   return (
     <Card
       style={styles.formCard}
       title={
         <Title level={4} style={styles.formTitle}>
-        
+          {selectedId ? "Editing" : "Share"} a story
         </Title>
       }
     >
@@ -67,6 +83,25 @@ const StoryForm = () => {
             Share
           </Button>
         </Form.Item>
+
+        {!selectedId ? null :
+        <Form.Item
+          wrapperCol={{
+            span: 16,
+            offset: 6
+          }}
+        >
+          <Button
+            type="primary"
+            block
+            htmlType="button"
+            danger
+            onClick={reset}
+          >
+            Discard
+          </Button>
+          </Form.Item>
+        }
       </Form>
     </Card>
   )
