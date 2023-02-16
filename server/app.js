@@ -13,7 +13,7 @@ app.use(cors());
 app.use("/stories", storyRoutes);
 
 
-const MONGO_URI = "mongodb+srv://instaverse:Hardrock89@cluster0.7fvxlja.mongodb.net/?retryWrites=true&w=majority";
+const MONGO_URI = "mongodb+srv://instaverse:jkflkdsjalfkkfjEEjlkjfd@cluster0.7fvxlja.mongodb.net/?retryWrites=true&w=majority";
 const PORT = process.env.PORT || 5001;
 
 const connectDB = async () => {
